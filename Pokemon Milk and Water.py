@@ -18,7 +18,7 @@ def randomSpawnpoint():
     return choice(spawnpoints)
 
 
-spawnable_pokemon = ["mewtwo", "mew", "onix", "charizard", "pikachu", "bulbasaur", "charmander", "dragonite"]
+spawnable_pokemon = ["mewtwo", "mew", "onix", "charizard", "pikachu", "bulbasaur", "charmander", "dragonite", "venusaur"]
 pokemon = []
 caught_pokemon = []
 pokeballs = []
@@ -50,6 +50,8 @@ def spawn_new_pokemon():
     elif randompokemon == 'charmander':
         sc = 0.2
     elif randompokemon == 'dragonite':
+        sc = 0.02
+    elif randompokemon == 'venusaur':
         sc = 0.02
     else:
         sc = 1
