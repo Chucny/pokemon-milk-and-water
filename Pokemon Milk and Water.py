@@ -101,7 +101,7 @@ Sky()
 city = Entity(model="viridian_city", scale=0.5)
 ground = Entity(model="cube", scale=(100,1,100), collider="box", color=color.clear)
 
-spawnpoints = [(6,1,9),(6,1,0),(7,1,10),(13,1,15),(6,1,18)]
+spawnpoints = [(6,1,9),(6,1,0),(7,1,10),(13,1,15),(6,1,18), (7, 1, 5), (9, 1, 14)]
 
 def randomSpawnpoint():
     return choice(spawnpoints)
