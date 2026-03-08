@@ -1,2 +1,2 @@
 # Pokemon Milk & Water
-A Pokemon game, wich is now 2 in one, but was supposed to be 1 in 2. Catch Pokemon. Throw to the Pokemon's feet (hitbox). This works best. Under developement. Dependencies: ursina<br>Pokemon are copyrighted characters of Game Freak and Nintendo
+Welcome to the world of Pokemon: Milk & Water! This is a game developed by Chucny. Catch Pokemon, and finish up with an epic boss fight against Mewtwo!<br><strong>Controls</strong><br>WASD: Move<br>Q: Throw pokeball<br>E: throw masterball<br>O: close the game<br>Enter: close the dialogue<br><strong>Dependencies</strong><br>ursina<br><br>Pokemon are copyrighted characters of Game Freak and Nintendo<br>Copyright &copy; Chucny 2026
