@@ -103,14 +103,14 @@ def randomSpawnpoint():
 # POKEDEX
 # ---------------------
 
-pokedex = ["mew","onix","charizard","pikachu","bulbasaur","charmander","dragonite","venusaur"]
+pokedex = ["mew","onix","charizard","pikachu","bulbasaur","charmander","dragonite","venusaur", "squirtle"]
 pokedex_complete = False
 
 # ---------------------
 # DATA
 # ---------------------
 
-spawnable_pokemon = ["onix","charizard","pikachu","bulbasaur","charmander","dragonite","venusaur"]
+spawnable_pokemon = ["onix","charizard","pikachu","bulbasaur","charmander","dragonite","venusaur", "squirtle"]
 
 pokemon = []
 caught_pokemon = []
@@ -137,7 +137,8 @@ def spawn_specific_pokemon(name, coordinates):
         "dragonite":0.02,
         "venusaur":0.02,
         "onix":0.03,
-        "mewtwo":3
+        "mewtwo":3,
+        "squirtle":0.05
     }
 
     sc = scale_map.get(name,1)
@@ -189,7 +190,8 @@ def spawn_new_pokemon():
         "bulbasaur":0.02,
         "charmander":0.4,
         "dragonite":0.02,
-        "venusaur":0.02
+        "venusaur":0.02,
+        "squirtle":0.05
     }
 
     sc = scale_map.get(randompokemon,1)
