@@ -131,6 +131,10 @@ mewtwo_spawned = False
 # SPAWN NORMAL POKEMON
 # ---------------------
 
+def teleport_player_back():
+    if player.y < -4:
+        player.position = (0, 4, 0)
+
 def spawn_new_pokemon():
 
     used_positions = [p.position for p in pokemon]
@@ -165,7 +169,32 @@ def spawn_pokemon():
         spawn_new_pokemon()
 
 spawn_pokemon()
+def spawn_specific_pokemon(name, coordinates):
 
+    scale_map = {
+        "mew":0.045,
+        "charizard":0.03,
+        "pikachu":0.5,
+        "bulbasaur":0.02,
+        "charmander":0.4,
+        "dragonite":0.02,
+        "venusaur":0.02,
+        "onix":0.03,
+        "mewtwo":3
+    }
+
+    sc = scale_map.get(name,1)
+
+    pok = Entity(
+        model=name,
+        position=coordinates,
+        scale=sc
+    )
+
+    pok.name = name
+    pokemon.append(pok)
+
+    return pok
 
 # ---------------------
 # SPAWN MEWTWO
@@ -221,28 +250,79 @@ def check_pokedex():
 # PLAYER SAFETY
 # ---------------------
 
-def teleport_player_back():
-    if player.y < -2:
-        player.position = (0,4,0)
+def catch_animation(ball, p):
 
+    # stop physics
+    ball.velocity = Vec3(0,0,0)
 
-# ---------------------
-# THROW POKEBALL
-# ---------------------
+    # lock objects so collision can't trigger again
+    ball.catching = True
+    p.being_caught = True
 
-def throw_pokeball():
+    # lift ball
+    ball.animate_y(ball.y + 1, duration=0.4, curve=curve.out_quad)
 
-    spawn_pos = player.position + Vec3(0,1.5,0)
+    # shake animation
+    def shake():
 
-    ball = Entity(
-        model="pokeball",
-        scale=0.2,
-        position=spawn_pos
-    )
+        ball.animate_rotation_z(20, duration=0.08)
+        ball.animate_rotation_z(-20, duration=0.08, delay=0.08)
+        ball.animate_rotation_z(0, duration=0.08, delay=0.16)
 
-    ball.velocity = camera.forward * 7
-    pokeballs.append(ball)
+    invoke(shake, delay=0.5)
+    invoke(shake, delay=1.0)
+    invoke(shake, delay=1.5)
 
+    # stars
+    def stars():
+
+        for i in range(8):
+
+            star = Entity(
+                model="sphere",
+                color=color.yellow,
+                scale=0.1,
+                position=ball.position
+            )
+
+            star.animate_position(
+                star.position + Vec3(
+                    random()-0.5,
+                    random(),
+                    random()-0.5
+                ).normalized()*2,
+                duration=0.5
+            )
+
+            star.animate_scale(0, duration=0.5)
+
+            destroy(star, delay=0.5)
+
+    # finish catch
+    def finish():
+
+        caught_name = p.name
+
+        if p in pokemon:
+            pokemon.remove(p)
+
+        if ball in pokeballs:
+            pokeballs.remove(ball)
+
+        destroy(p)
+        destroy(ball)
+
+        caught_pokemon.append(caught_name)
+
+        print("You caught:", caught_name)
+        print("Caught list:", caught_pokemon)
+
+        check_pokedex()
+
+        invoke(spawn_new_pokemon, delay=8)
+
+    invoke(stars, delay=2)
+    invoke(finish, delay=2.3)
 
 
 
@@ -260,6 +340,23 @@ def throw_masterball():
 
         ball.velocity = camera.forward * 7
         pokeballs.append(ball)
+
+def throw_pokeball():
+
+    if True:
+        
+        spawn_pos = player.position + Vec3(0,1.5,0)
+
+        ball = Entity(
+            model="pokeball",
+            scale=0.1,
+            position=spawn_pos
+        )
+
+        ball.velocity = camera.forward * 7
+        pokeballs.append(ball)
+
+
 # ---------------------
 # SHADOW BALL
 # ---------------------
@@ -315,7 +412,7 @@ def update():
 
         for p in pokemon[:]:
 
-            if distance(ball.position, p.position) < 1:
+            if distance(ball.position, p.position) < 1 and not getattr(p,"being_caught",False):
 
                 # MEWTWO DAMAGE SYSTEM
                 if hasattr(p,"is_boss"):
@@ -338,11 +435,7 @@ def update():
                 # NORMAL CATCH
                 caught_name = p.name
 
-                destroy(ball)
-                destroy(p)
-
-                pokeballs.remove(ball)
-                pokemon.remove(p)
+                catch_animation(ball, p)
 
                 caught_pokemon.append(caught_name)
 
