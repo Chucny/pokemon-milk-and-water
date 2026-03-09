@@ -247,37 +247,52 @@ def check_pokedex():
 
 
 # ---------------------
-# PLAYER SAFETY
+# CATCH ANIMATION
 # ---------------------
+
+
+
+
+
+
+
+
+
 
 def catch_animation(ball, p):
 
-    # stop physics
+    # Stop ball movement and lock
     ball.velocity = Vec3(0,0,0)
-
-    # lock objects so collision can't trigger again
     ball.catching = True
     p.being_caught = True
 
-    # lift ball
-    ball.animate_y(ball.y + 1, duration=0.4, curve=curve.out_quad)
+    start_y = ball.y
 
-    # shake animation
-    def shake():
+    # -----------------------
+    # Ball pops up then drops slightly
+    # -----------------------
+    ball.animate_y(start_y + 1, duration=0.35, curve=curve.out_quad)
+    ball.animate_y(start_y + 0.85, duration=0.15, delay=0.35)
 
-        ball.animate_rotation_z(20, duration=0.08)
-        ball.animate_rotation_z(-20, duration=0.08, delay=0.08)
-        ball.animate_rotation_z(0, duration=0.08, delay=0.16)
+    # -----------------------
+    # SHAKE SEQUENCE (left-right x3)
+    # -----------------------
+    shake_times = [0.5, 0.8, 1.1]  # delays for 3 shakes
 
-    invoke(shake, delay=0.5)
-    invoke(shake, delay=1.0)
-    invoke(shake, delay=1.5)
+    for i, delay_time in enumerate(shake_times):
 
-    # stars
+        # left
+        invoke(lambda b=ball: b.animate_rotation_z(-25, duration=0.08), delay=delay_time)
+        # right
+        invoke(lambda b=ball: b.animate_rotation_z(25, duration=0.08), delay=delay_time + 0.08)
+        # center
+        invoke(lambda b=ball: b.animate_rotation_z(0, duration=0.08), delay=delay_time + 0.16)
+
+    # -----------------------
+    # STAR EFFECT
+    # -----------------------
     def stars():
-
-        for i in range(8):
-
+        for _ in range(8):
             star = Entity(
                 model="sphere",
                 color=color.yellow,
@@ -285,27 +300,22 @@ def catch_animation(ball, p):
                 position=ball.position
             )
 
-            star.animate_position(
-                star.position + Vec3(
-                    random()-0.5,
-                    random(),
-                    random()-0.5
-                ).normalized()*2,
-                duration=0.5
-            )
-
+            direction = Vec3(random()-0.5, random(), random()-0.5).normalized()
+            star.animate_position(star.position + direction * 2, duration=0.5)
             star.animate_scale(0, duration=0.5)
 
             destroy(star, delay=0.5)
 
-    # finish catch
-    def finish():
+    invoke(stars, delay=1.6)  # after shakes
 
+    # -----------------------
+    # Finish catch
+    # -----------------------
+    def finish():
         caught_name = p.name
 
         if p in pokemon:
             pokemon.remove(p)
-
         if ball in pokeballs:
             pokeballs.remove(ball)
 
@@ -321,8 +331,10 @@ def catch_animation(ball, p):
 
         invoke(spawn_new_pokemon, delay=8)
 
-    invoke(stars, delay=2)
-    invoke(finish, delay=2.3)
+    invoke(finish, delay=2.0)
+
+
+
 
 
 
