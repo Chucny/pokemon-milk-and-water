@@ -445,6 +445,7 @@ def update():
                         break
 
                 # NORMAL CATCH
+                p.visible = False
                 caught_name = p.name
 
                 catch_animation(ball, p)
