@@ -117,7 +117,7 @@ shadow_balls = []
 mewtwo_spawned = False
 
 mewdialogue = False
-mewspawnpoint = (-8, 1, -8)
+mewspawnpoint = (-13, 1, -13)
 
 
 # ---------------------
