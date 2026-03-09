@@ -335,7 +335,7 @@ def catch_animation(ball, p):
 
         print("You caught:", caught_name)
         print("Caught list:", caught_pokemon)
-
+        dialogue(caught_name + " was caught!", speaker="Game")
         check_pokedex()
 
         invoke(spawn_new_pokemon, delay=8)
@@ -346,10 +346,10 @@ def catch_animation(ball, p):
 # ---------------------
 # THROW BALLS
 # ---------------------
-
+notmewtwocaught = True
 def throw_masterball():
 
-    if mewtwo_catch:
+    if mewtwo_catch and notmewtwocaught:
         dialogue("Now it's time to catch Mewtwo with the Masterball", speaker="Professor Oak")
         spawn_pos = player.position + Vec3(0,1.5,0)
 
@@ -473,7 +473,10 @@ def show_pokedex():
 
 
 
-
+def check_if_mewtwo_in_pokedex():
+    global notmewtwocaught
+    if "mewtwo" in caught_pokemon:
+        notmewtwocaught = False
 
 
 
@@ -596,5 +599,6 @@ def update():
 
     teleport_player_back()
     checkmewdialogue()
+    check_if_mewtwo_in_pokedex()
 
 app.run()
