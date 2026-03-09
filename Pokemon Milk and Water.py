@@ -11,19 +11,6 @@ app = Ursina()
 
 ###########################################
 
-# -------------------------
-# POKEMON STYLE DIALOGUE
-# -------------------------
-
-
-# -------------------------
-# POKEMON STYLE DIALOGUE
-# -------------------------
-
-# -------------------------
-# SIMPLE POKEMON DIALOGUE
-# -------------------------
-
 dialogue_active = False
 dialogue_text_full = ""
 dialogue_index = 0
@@ -80,16 +67,19 @@ def input_dialogue(key):
 
 
 
+def touches(a, b, distance):
+    """
+    Returns True if points a and b are within 'distance' of each other.
+    a, b should be Vec3 or tuple (x, y, z)
+    """
+    # convert tuples to Vec3 if needed
+    if not isinstance(a, Vec3):
+        a = Vec3(*a)
+    if not isinstance(b, Vec3):
+        b = Vec3(*b)
 
+    return (a - b).length() <= distance
 ####################################################
-
-
-
-
-
-
-
-
 
 
 
@@ -117,7 +107,7 @@ pokedex_complete = False
 # DATA
 # ---------------------
 
-spawnable_pokemon = ["mew","onix","charizard","pikachu","bulbasaur","charmander","dragonite","venusaur"]
+spawnable_pokemon = ["onix","charizard","pikachu","bulbasaur","charmander","dragonite","venusaur"]
 
 pokemon = []
 caught_pokemon = []
@@ -126,6 +116,49 @@ shadow_balls = []
 
 mewtwo_spawned = False
 
+mewdialogue = False
+mewspawnpoint = (-8, 1, -8)
+
+
+# ---------------------
+# SPAWN SPECIFIC POKEMON FUNCTION
+# ---------------------
+def spawn_specific_pokemon(name, coordinates):
+
+    scale_map = {
+        "mew":0.045,
+        "charizard":0.03,
+        "pikachu":0.5,
+        "bulbasaur":0.02,
+        "charmander":0.4,
+        "dragonite":0.02,
+        "venusaur":0.02,
+        "onix":0.03,
+        "mewtwo":3
+    }
+
+    sc = scale_map.get(name,1)
+
+    pok = Entity(
+        model=name,
+        position=coordinates,
+        scale=sc
+    )
+
+    pok.name = name
+    pokemon.append(pok)
+
+    return pok
+
+# Now spawn Mew safely (after function is defined)
+spawn_specific_pokemon('mew', mewspawnpoint)
+
+
+def checkmewdialogue():
+     global mewdialogue
+     if touches(player.position, mewspawnpoint, 4.5) and not mewdialogue:
+        dialogue('A Mew appeared!')
+        mewdialogue = True
 
 # ---------------------
 # SPAWN NORMAL POKEMON
@@ -169,32 +202,7 @@ def spawn_pokemon():
         spawn_new_pokemon()
 
 spawn_pokemon()
-def spawn_specific_pokemon(name, coordinates):
 
-    scale_map = {
-        "mew":0.045,
-        "charizard":0.03,
-        "pikachu":0.5,
-        "bulbasaur":0.02,
-        "charmander":0.4,
-        "dragonite":0.02,
-        "venusaur":0.02,
-        "onix":0.03,
-        "mewtwo":3
-    }
-
-    sc = scale_map.get(name,1)
-
-    pok = Entity(
-        model=name,
-        position=coordinates,
-        scale=sc
-    )
-
-    pok.name = name
-    pokemon.append(pok)
-
-    return pok
 
 # ---------------------
 # SPAWN MEWTWO
@@ -249,15 +257,6 @@ def check_pokedex():
 # ---------------------
 # CATCH ANIMATION
 # ---------------------
-
-
-
-
-
-
-
-
-
 
 def catch_animation(ball, p):
 
@@ -334,9 +333,9 @@ def catch_animation(ball, p):
     invoke(finish, delay=2.0)
 
 
-
-
-
+# ---------------------
+# THROW BALLS
+# ---------------------
 
 def throw_masterball():
 
@@ -355,18 +354,16 @@ def throw_masterball():
 
 def throw_pokeball():
 
-    if True:
-        
-        spawn_pos = player.position + Vec3(0,1.5,0)
+    spawn_pos = player.position + Vec3(0,1.5,0)
 
-        ball = Entity(
-            model="pokeball",
-            scale=0.1,
-            position=spawn_pos
-        )
+    ball = Entity(
+        model="pokeball",
+        scale=0.1,
+        position=spawn_pos
+    )
 
-        ball.velocity = camera.forward * 7
-        pokeballs.append(ball)
+    ball.velocity = camera.forward * 7
+    pokeballs.append(ball)
 
 
 # ---------------------
@@ -446,13 +443,12 @@ def update():
 
                 # NORMAL CATCH
                 p.visible = False
-                caught_name = p.name
 
                 catch_animation(ball, p)
 
-                caught_pokemon.append(caught_name)
+                # removed duplicate append to caught_pokemon
 
-                print("You caught:", caught_name)
+                print("You caught:", p.name)
                 print("Caught list:", caught_pokemon)
 
                 check_pokedex()
@@ -508,6 +504,6 @@ def update():
 
 
     teleport_player_back()
-
+    checkmewdialogue()
 
 app.run()
