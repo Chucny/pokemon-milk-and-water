@@ -6,63 +6,66 @@ import math
 
 app = Ursina()
 
+# config things
+
+window.show_fps = True
+
+# Hide the default top-right UI
+window.exit_button.visible = False  # removes the X button
+window.cog_button.visible = False     # removes the settings gear
+window.entity_counter.visible = False # removes the entity counter
+
+
+
+
 
 # DIALOGUE
 
 ###########################################
 
-dialogue_active = False
-dialogue_text_full = ""
-dialogue_index = 0
-
+# Dialogue text explicitly parented to camera.ui
 dialogue_text = Text(
     text="",
     position=(0,-0.45),
     scale=1.6,
     origin=(0,0),
-    background=True
+    background=True,
+    parent=camera.ui  # must be parented to camera.ui
 )
 
+# Dialogue logic
+dialogue_active = False
+dialogue_text_full = ""
+dialogue_index = 0
 
 def dialogue(text, text_colour=color.white, speaker=""):
-
     global dialogue_active, dialogue_text_full, dialogue_index
-
     dialogue_active = True
     dialogue_index = 0
-
     dialogue_text_full = f"{speaker}: {text}"
     dialogue_text.text = ""
     dialogue_text.color = text_colour
 
-
 def update_dialogue():
-
     global dialogue_index
-
     if not dialogue_active:
         return
-
     if dialogue_index < len(dialogue_text_full):
         dialogue_index += 1
         dialogue_text.text = dialogue_text_full[:dialogue_index]
 
-
 def input_dialogue(key):
-
     global dialogue_active, dialogue_index
-
     if not dialogue_active:
         return
-
-    if key == "enter":
-
+    if key == 'enter':
         if dialogue_index < len(dialogue_text_full):
             dialogue_index = len(dialogue_text_full)
             dialogue_text.text = dialogue_text_full
         else:
             dialogue_text.text = ""
             dialogue_active = False
+
 
 
 
@@ -202,6 +205,11 @@ def spawn_pokemon():
         spawn_new_pokemon()
 
 spawn_pokemon()
+
+
+
+
+
 
 
 # ---------------------
@@ -389,6 +397,53 @@ def throw_shadow_ball(mewtwo):
 # INPUT
 # ---------------------
 
+
+# POKEDEX
+
+
+def show_pokedex():
+    """Displays all caught Pokémon in a simple grid."""
+    # remove previous UI if needed
+    if hasattr(show_pokedex, "panel"):
+        destroy(show_pokedex.panel)
+
+    show_pokedex.panel = Entity(parent=camera.ui)
+
+    grid_size = 4  # Pokémon per row
+    spacing = 0.2
+    start_x = -0.45
+    start_y = 0.4
+
+    for i, name in enumerate(caught_pokemon):
+        row = i // grid_size
+        col = i % grid_size
+        x = start_x + col * spacing
+        y = start_y - row * spacing
+
+        # load image from online repository
+        img_url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{name}.png"
+
+        # Use Ursina's Image widget
+        Button(
+            parent=show_pokedex.panel,
+            model='quad',
+            texture=img_url,
+            scale=(0.15, 0.15),
+            position=(x, y)
+        )
+
+
+
+
+
+
+
+
+
+
+
+
+
 def input(key):
 
     if key == "q":
@@ -399,6 +454,8 @@ def input(key):
 
     if key == "o":
         _exit(0)
+    if key == 'p':
+        show_pokedex()
     input_dialogue(key)
 
 # ---------------------
