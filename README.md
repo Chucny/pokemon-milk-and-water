@@ -11,7 +11,7 @@ O: Close the game<br>
 Enter: Close the dialogue</pre>
 
 <br><br><strong>Dependencies</strong><br><pre id="codeBlock" style="overflow-x:auto; white-space:pre-wrap;">
-ursina</pre>
+ursina<br>Not needed, since the game installs it automatically.</pre>
 
 <br><br>
 <img src="screenshot1.png" >
