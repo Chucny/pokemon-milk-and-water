@@ -3,15 +3,15 @@
 Welcome to the world of Pokemon: Milk & Water! This is a game developed by Chucny.  
 Catch Pokemon, and finish up with an epic boss fight against Mewtwo!
 
-<br><strong>Controls</strong><br>
+<br><strong>Controls</strong><br><pre id="codeBlock" style="overflow-x:auto; white-space:pre-wrap;">
 WASD: Move<br>
 Q: Throw pokeball<br>
 E: Throw masterball<br>
 O: Close the game<br>
-Enter: Close the dialogue
+Enter: Close the dialogue</pre>
 
-<br><br><strong>Dependencies</strong><br>
-ursina
+<br><br><strong>Dependencies</strong><br><pre id="codeBlock" style="overflow-x:auto; white-space:pre-wrap;">
+ursina</pre>
 
 <br><br>
 <img src="screenshot1.png" >
