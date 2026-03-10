@@ -18,7 +18,7 @@ ursina
 <br>A screenshot
 
 <br><br>
-<img src="mewencounter.png" >
+<img src="mew encounter.png" >
 <br>A wild Mew appeared!
 
 <br><br>
