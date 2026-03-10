@@ -1,3 +1,6 @@
+try: import ursina
+except ImportError: import subprocess, sys; subprocess.check_call([sys.executable, "-m", "pip", "install", "ursina"])
+
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from random import *
@@ -602,3 +605,4 @@ def update():
     check_if_mewtwo_in_pokedex()
 
 app.run()
+
