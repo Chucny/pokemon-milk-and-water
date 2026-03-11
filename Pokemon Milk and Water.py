@@ -232,7 +232,7 @@ spawn_pokemon()
 
 
 
-
+battlemusic_playing = False
 
 
 
@@ -242,14 +242,15 @@ spawn_pokemon()
 
 def spawn_mewtwo():
 
-    global mewtwo_spawned
+    global mewtwo_spawned, battlemusic_playing
 
     if mewtwo_spawned:
         return
 
     print("POKEDEX COMPLETE!")
     print("Mewtwo appeared!")
-
+    changemusic("bossfight.mp3")
+    battlemusic_playing = True
     boss = Entity(
         model="mewtwo",
         scale=3,
@@ -526,7 +527,7 @@ dialogue("Hello! Welcome to the world of Pokemon!", speaker="Professor Oak")
 
 def update():
     update_dialogue()
-    global mewtwo_catch
+    global mewtwo_catch, battlemusic_playing
     # -----------------
     # MOVE POKEBALLS
     # -----------------
@@ -554,6 +555,9 @@ def update():
                             mewtwo_catch = True
                             p.catchable = True
                             print("Mewtwo is weak! Now catch it!")
+                            if battlemusic_playing == True:
+                                battlemusic_playing = False
+                                changemusic("pokemusic.mp3")
 
                         break
 
