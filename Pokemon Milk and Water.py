@@ -1,16 +1,35 @@
 try: import ursina
 except ImportError: import subprocess, sys; subprocess.check_call([sys.executable, "-m", "pip", "install", "ursina"])
-
+try:
+    import pygame
+except ImportError:
+    import subprocess, sys
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pygame"])
+    import pygame
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from random import *
 from os import *
 import math
 
+pygame.mixer.init()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def changemusic(file):
+    path = os.path.join(BASE_DIR, file)
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.play(-1)
+
+def playsound(file):
+    path = os.path.join(BASE_DIR, file)
+    pygame.mixer.Sound(path).play()
+
+
+
 app = Ursina()
-
 # config things
-
+changemusic("pokemusic.mp3")
 window.show_fps = True
 
 # Hide the default top-right UI
@@ -605,4 +624,3 @@ def update():
     check_if_mewtwo_in_pokedex()
 
 app.run()
-
