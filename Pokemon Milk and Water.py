@@ -357,9 +357,9 @@ def catch_animation(ball, p):
 
         print("You caught:", caught_name)
         print("Caught list:", caught_pokemon)
+        playsound("catch.mp3")
         dialogue(caught_name + " was caught!", speaker="Game")
         check_pokedex()
-
         invoke(spawn_new_pokemon, delay=8)
 
     invoke(finish, delay=2.0)
